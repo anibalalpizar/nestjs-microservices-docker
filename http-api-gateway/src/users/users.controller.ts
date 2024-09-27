@@ -1,5 +1,6 @@
-import { Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { CreateUserDto } from './dto/CreateUser.dto';
 
 @Controller('users')
 // no comunicate with a database, communicate with a nats server
@@ -13,6 +14,7 @@ export class UsersController {
   ) {}
 
   @Post()
-  createUser() {
+  createUser(@Body() createUserDto: CreateUserDto) {
+    console.log('createUserDto', createUserDto);
   }
 }
