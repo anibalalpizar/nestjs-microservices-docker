@@ -1,16 +1,19 @@
 import { Controller, Inject } from '@nestjs/common';
 import { ClientProxy, EventPattern, Payload } from '@nestjs/microservices';
 import { CreatePaymentDto } from './dtos/CreatePayment.dto';
+import { PaymentsService } from './payments.service';
 
 @Controller()
 export class PaymentsMicroserviceController {
   constructor(
     @Inject('NATS_SERVICE') private readonly natsClient: ClientProxy,
+    private paymentsService: PaymentsService,
   ) {}
   // event-based approach
   @EventPattern('createPayment')
-  createPayment(@Payload() data: CreatePaymentDto) {
+  async createPayment(@Payload() data: CreatePaymentDto) {
     console.log(data);
-    this.natsClient.emit('paymentCreated', data);
+    const newPayment = await this.paymentsService.createPayment(data);
+    this.natsClient.emit('paymentCreated', newPayment);
   }
 }
