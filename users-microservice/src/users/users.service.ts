@@ -16,6 +16,9 @@ export class UsersService {
   }
 
   getUserById(userId: string) {
-    return this.usersRepository.findOneBy({ id: userId });
+    return this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['payments'],
+    });
   }
 }
